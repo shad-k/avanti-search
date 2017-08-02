@@ -1,9 +1,9 @@
 {
-  "name": "avantisearch",
+  "name": "avanti-search",
   "version": "1.0.0",
   "description": "VTEX Avanti Search",
   "main": "index.js",
-  "repository": "https://github.com/avanti/avantisearch",
+  "repository": "https://github.com/avanti/avanti-search",
   "author": "Carlo Schneider <carlo.schneider@penseavanti.com.br>",
   "license": "MIT",
   "scripts": {
