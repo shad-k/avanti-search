@@ -6,14 +6,15 @@
 2. Install [JS-Cookie](https://github.com/js-cookie/js-cookie).
 3. Insert `avanti-search.js` in your store.
 4. Insert `avanti-search.css` in your store.
-5. Insert below script in your template at the bottom. Inside `<body>` tag:
+5. Insert VTEX search result tag `<vtex.cmc:searchResult/>` in yout template.
+6. Insert below script in your template at the bottom. Inside `<body>` tag:
 ```html
 <script>
     var scriptContent = $('.resultItemsWrapper').children('script').html();
     eval('window.'+ /(PageClick_)([0-9]+)/g.exec(scriptContent)[0] +' = function () {}');
 </script>
 ```
-6. Call plugin in your JavaScript:
+7. Call plugin in your JavaScript:
 ```javascript
 (function() {
     $('.resultItemsWrapper div[id^="ResultItems"]').avantiSearch();
