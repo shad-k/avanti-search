@@ -39,7 +39,7 @@
       var self = this;
 
       $('.resultItemsWrapper div[id^=ResultItems]')
-        .before('<button class="'+ self.options.classLoadLess +' load-btn--hide">'+ self.options.textLoadLess +'</button>')
+        .before('<button class="'+ self.options.classLoadLess +' '+ self.options.classLoadBtnHide +'">'+ self.options.textLoadLess +'</button>')
         .after('<button class="'+ self.options.classLoadMore +'">'+ self.options.textLoadMore +'</button>');
     },
 
@@ -107,8 +107,8 @@
       self.options.$result.trigger('avantisearch.initWithCookie', [ self.options, self.request ]);
 
       if (pageNumber === totalPages && pageNumber !== 1) {
-        self._enableButton(self.options.classLoadLess);
-        self._disableButton(self.options.classLoadMore);
+        self._showButton(self.options.classLoadLess);
+        self._hideButton(self.options.classLoadMore);
 
         self.load('html', pageNumber, function () {
           self._showItems(pageNumber);
@@ -120,8 +120,8 @@
         self._startFirst(pageNumber, totalPages === 1 ? false : true);
 
       } else if (pageNumber > 1) {
-        self._enableButton(self.options.classLoadMore);
-        self._enableButton(self.options.classLoadLess);
+        self._showButton(self.options.classLoadMore);
+        self._showButton(self.options.classLoadLess);
 
         self.load('html', pageNumber, function () {
           self._setUrlHash(pageNumber);
@@ -138,14 +138,14 @@
       }
     },
 
-    _startFirst: function (pageNumber, startSecond) {
+    _startFirst: function (pageNumber, startSecond, callback) {
       var self = this;
 
       if (typeof startSecond === 'undefined') {
         startSecond = true;
       }
 
-      self._disableButton(self.options.classLoadLess);
+      self._hideButton(self.options.classLoadLess);
 
       self.load('html', pageNumber, function () {
         self._showItems(pageNumber);
@@ -153,11 +153,15 @@
 
         if (startSecond) {
           self.load('append', pageNumber + 1, function () {
-            self._enableButton(self.options.classLoadMore);
+            self._showButton(self.options.classLoadMore);
+
+            typeof callback !== 'undefined' && callback();
           });
 
         } else {
-          self._disableButton(self.options.classLoadMore);
+          self._hideButton(self.options.classLoadMore);
+
+          typeof callback !== 'undefined' && callback();
         }
       });
     },
@@ -167,13 +171,13 @@
 
       self._checkDefaultParams() && self._setDefaultParams();
 
-      self.load('html', 1, function () {
-        self._showItems(1);
-        self._setUrlHash(1);
-        self._saveCookie();
+      self.options.$result.find('> div > ul > li')
+        .attr('page', 1)
+        .removeClass('last first');
 
-        self.load('append', 2, undefined);
-      });
+      self._setUrlHash(1);
+      self._saveCookie();
+      self.load('append', 2);
     },
 
 
@@ -315,25 +319,37 @@
     _showItems: function (page) {
       var self = this;
 
+      self.options.$result.trigger('avantisearch.beforeShowItems', [ self.options, self.request, page ]);
+
       self.options.$result
         .find('.'+ self.options.classItemPreLoad +'[page="'+ page +'"]')
         .removeClass(self.options.classItemPreLoad);
+
+      self.options.$result.trigger('avantisearch.afterShowItems', [ self.options, self.request, page ]);
     },
 
     _enableButton: function (button) {
       var self = this;
 
-      $('.'+ button)
-        .removeClass(self.options.classLoadBtnHide)
-        .removeAttr('disabled');
+      $('.'+ button).removeAttr('disabled');
     },
 
     _disableButton: function (button) {
       var self = this;
 
-      $('.'+ button)
-        .addClass(self.options.classLoadBtnHide)
-        .attr('disabled', 'disabled');
+      $('.'+ button).attr('disabled', 'disabled');
+    },
+
+    _hideButton: function (button) {
+      var self = this;
+
+      $('.'+ button).addClass(self.options.classLoadBtnHide)
+    },
+
+    _showButton: function (button) {
+      var self = this;
+
+      $('.'+ button).removeClass(self.options.classLoadBtnHide)
     },
 
     /**
@@ -433,6 +449,18 @@
 
       self.options.totalItems = self._getTotalItems();
       self.options.totalPages = self._getTotalPages();
+    },
+
+    _loadFirst: function (callback) {
+      var self = this;
+
+      self._getTotalItems(function (totalItems) {
+        self.options.totalItems = totalItems;
+        self.options.$totalItems.text(totalItems);
+        self.options.totalPages = self._getTotalPages();
+
+        self._startFirst(1, self.options.totalPages === 1 ? false : true, callback);
+      });
     },
 
     /**
@@ -597,7 +625,7 @@
 
           self._loadNext(pageByType) ?
             self.load(method, pageByType.nextPage) :
-            self._disableButton(hide)
+            self._hideButton(hide)
 
           self._setUrlHash(pageByType.showPage);
           self._showItems(pageByType.showPage);
@@ -623,18 +651,21 @@
 
           self.options.$result.trigger('avantisearch.beforeChangeOrder', [ self.options, self.request, _this ]);
           self._setUrlHash(1);
-          self._changeOrder(value);
-          self.options.$result.trigger('avantisearch.afterChangeOrder', [ self.options, self.request, _this ]);
+          self._changeOrder(value, function () {
+            self.options.$result.trigger('avantisearch.afterChangeOrder', [ self.options, self.request, _this ]);
+          });
         });
     },
 
-    _changeOrder: function (value) {
+    _changeOrder: function (value, callback) {
       var self = this;
 
       self.request.query.O = value;
 
       self._concatRequest();
-      self._startFirst(1);
+      self._setUrlHash(1);
+
+      self._loadFirst(callback);
     },
 
     bindFilters: function () {
@@ -658,8 +689,10 @@
         }
 
         self.options.$result.trigger('avantisearch.beforeFilter', [ self.options, self.request, _this ]);
-        self._refreshFilter(filter, checked);
-        self.options.$result.trigger('avantisearch.afterFilter', [ self.options, self.request, _this ]);
+        self._refreshFilter(filter, checked, function () {
+          self.options.$result.trigger('avantisearch.afterFilter', [ self.options, self.request, _this ]);
+          self._setUrlHash(1);
+        });
       });
     },
 
@@ -668,7 +701,7 @@
      * @param  {string} filter Filter
      * @param  {boolean} action true: add; false: remove
      */
-    _refreshFilter: function (filter, action) {
+    _refreshFilter: function (filter, action, callback) {
       var self = this;
 
       var filterSplit = filter.split('=');
@@ -684,17 +717,7 @@
         self.request.query[key].splice(index, 1);
       }
 
-      /**
-       * TODO
-       * Call api to check total products again
-       */
-      self._getTotalItems(function (totalItems) {
-        self.options.totalItems = totalItems;
-        self.options.$totalItems.text(totalItems);
-        self.options.totalPages = self._getTotalPages();
-
-        self._startFirst(1, self.options.totalPages === 1 ? false : true);
-      });
+      self._loadFirst(callback);
     },
 
 
