@@ -83,6 +83,8 @@
 | avantisearch.afterChangeOrder | event, options, request, element | Description |
 | avantisearch.beforeFilter | event, options, request, element | Description |
 | avantisearch.afterFilter | event, options, request, element | Description |
+| avantisearch.beforeShowItems | event, options, request, page | Description |
+| avantisearch.afterShowItems | event, options, request, page | Description |
 
 **Example:**
 ```javascript
