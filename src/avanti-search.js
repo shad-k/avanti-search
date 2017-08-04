@@ -221,7 +221,9 @@
 
         $item.attr('page', self.request.query.PageNumber);
 
-        $item.addClass(self.options.classItemPreLoad);
+        if (self.request.query.PageNumber > 1) {
+          $item.addClass(self.options.classItemPreLoad);
+        }
 
         $list[method]($products.html());
 
