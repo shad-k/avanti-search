@@ -238,7 +238,7 @@
         typeof callback === 'function' && callback(self);
 
       }, function (response) {
-        if (response.status === 500 && attempts < 1) {
+        if (response.status === 500 && attempts < self.options.attempts) {
           attempts++;
           self._search(method, callback, attempts);
         }
@@ -765,7 +765,8 @@
           // 'query': {
           //   'O': 'OrderByPriceASC'
           // }
-        }
+        },
+        attempts: 1
       }
     }
   };

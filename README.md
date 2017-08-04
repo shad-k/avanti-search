@@ -55,6 +55,7 @@
 |--- |--- |--- |--- |
 | cookieName | String | `AvantiSearchQuery` | Description |
 | defaultParams | Object | `{}` | Pass default params to request.<br>**Example:** `{ 'query': { 'O': 'OrderByPriceASC' } }` |
+| attempts | Number | 1 | Description |
 
 **Example:**
 
