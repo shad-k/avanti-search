@@ -97,6 +97,8 @@
 | avantisearch.afterChangeOrder | event, options, request, element | Description |
 | avantisearch.beforeFilter | event, options, request, element | Description |
 | avantisearch.afterFilter | event, options, request, element | Description |
+| avantisearch.beforeChangePage | event, options, request | Description |
+| avantisearch.afterChangePage | event, options, request | Description |
 | avantisearch.beforeShowItems | event, options, request, page | Description |
 | avantisearch.afterShowItems | event, options, request, page | Description |
 
