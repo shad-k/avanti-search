@@ -27,6 +27,7 @@
 
 | Option | Type | Default | Description |
 |--- |--- |--- |--- |
+| $resultItemsWrapper | Element | `$('.resultItemsWrapper')` | Description |
 | $script | Element | `$('.resultItemsWrapper').children('script')` | Description |
 | $totalItems | Element | `$('.searchResultsTime:first .resultado-busca-numero .value')` | Description |
 | $selectOrder | Element | `$('#O')` | Description |
@@ -41,13 +42,25 @@
 | classLoadBtnHide | String | `load-btn--hide` | Description |
 | classLoadLess | String | `load-less` | Description |
 | classLoadMore | String | `load-more` | Description |
+| classPagination | String | `pagination` | Description |
 
 ##### Texts
 
 | Option | Type | Default | Description |
 |--- |--- |--- |--- |
 | textLoadLess | String | `Load less` | Description |
-| textLoadMore | Object | `Load more` | Description |
+| textLoadMore | String | `Load more` | Description |
+| textPaginationFirst | String | `First` | Description |
+| textPaginationPrev | String | `Prev` | Description |
+| textPaginationNext | String | `Next` | Description |
+| textPaginationLast | String | `Last` | Description |
+
+##### Pagination
+
+| Option | Type | Default | Description |
+|--- |--- |--- |--- |
+| pagination | Boolean | `false` | Description |
+| paginationRangeButtons | Number | `3` | Description |
 
 ##### Others
 
@@ -55,7 +68,7 @@
 |--- |--- |--- |--- |
 | cookieName | String | `AvantiSearchQuery` | Description |
 | defaultParams | Object | `{}` | Pass default params to request.<br>**Example:** `{ 'query': { 'O': 'OrderByPriceASC' } }` |
-| attempts | Number | 1 | Description |
+| attempts | Number | `1` | Description |
 
 **Example:**
 
