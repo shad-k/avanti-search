@@ -1,5 +1,5 @@
 /*!
- * Avanti Search - v1.2.2 - 2017-08-12
+ * Avanti Search - v1.2.3 - 2017-08-12
  * https://github.com/avanti/avantisearch
  * Licensed MIT
  */
@@ -81,10 +81,16 @@
         return false;
       }
 
-      var hash = window.location.hash.substr(1);
+      var hash = parseInt(window.location.hash.substr(1));
       var cookie = Cookies.get(self.options.cookieName);
 
-      return !isNaN(parseInt(hash)) && typeof cookie !== 'undefined';
+      var localQuery = $.extend({}, self.request.query);
+      localQuery.PageNumber = hash;
+
+      return (
+        JSON.stringify(localQuery) === JSON.stringify(JSON.parse(cookie)) &&
+        typeof cookie !== 'undefined'
+      );
     },
 
 
