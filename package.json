@@ -1,6 +1,6 @@
 {
   "name": "avanti-search",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "VTEX Avanti Search",
   "main": "index.js",
   "repository": "https://github.com/avanti/avanti-search",
