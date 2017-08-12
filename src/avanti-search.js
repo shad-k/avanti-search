@@ -1,5 +1,5 @@
 /*!
- * Avanti Search - v1.1.3 - 2017-08-04
+ * Avanti Search - v1.2.0 - 2017-08-12
  * https://github.com/avanti/avantisearch
  * Licensed MIT
  */
@@ -32,6 +32,8 @@
       self._concatRequest();
       self._setPaginationInfo();
 
+      self.options.pagination && self._setPaginationWrap();
+
       self.checkAndStart();
     },
 
@@ -41,6 +43,16 @@
       $('.resultItemsWrapper div[id^=ResultItems]')
         .before('<button class="'+ self.options.classLoadLess +' '+ self.options.classLoadBtnHide +'">'+ self.options.textLoadLess +'</button>')
         .after('<button class="'+ self.options.classLoadMore +'">'+ self.options.textLoadMore +'</button>');
+    },
+
+    _setPaginationWrap: function () {
+      var self = this;
+
+      var $pagination = $('<div />', {
+        class: self.options.classPagination
+      });
+
+      self.options.$resultItemsWrapper.append($pagination);
     },
 
 
@@ -90,7 +102,7 @@
       self._applyCookieParams();
 
       self._getTotalItems(function (totalItems) {
-        self.options.totalItems = totalItems;
+        self.options.totalItems = parseInt(totalItems);
         self.options.$totalItems.text(totalItems);
         self.options.totalPages = self._getTotalPages();
 
@@ -105,6 +117,15 @@
       var totalPages = self.options.totalPages;
 
       self.options.$result.trigger('avantisearch.initWithCookie', [ self.options, self.request ]);
+
+      if (self.options.pagination) {
+        self._startPagination();
+        self.load('html', pageNumber, function () {
+          self._showItems(pageNumber);
+        });
+
+        return false;
+      }
 
       if (pageNumber === totalPages && pageNumber !== 1) {
         self._showButton(self.options.classLoadLess);
@@ -177,7 +198,33 @@
 
       self._setUrlHash(1);
       self._saveCookie();
+
+      if (self.options.pagination) {
+        self._startPagination();
+
+        return false;
+      }
+
       self.load('append', 2);
+    },
+
+    _startPagination: function () {
+      var self = this;
+
+      self._hideButton(self.options.classLoadMore);
+      self._disableButton(self.options.classLoadMore);
+
+      self._hideButton(self.options.classLoadLess);
+      self._disableButton(self.options.classLoadLess);
+
+      self._createPagination();
+      self.bindPagination();
+    },
+
+    _clearPagination: function () {
+      var self = this;
+
+      self.options.$pagination.html('');
     },
 
 
@@ -457,7 +504,7 @@
       var self = this;
 
       self._getTotalItems(function (totalItems) {
-        self.options.totalItems = totalItems;
+        self.options.totalItems = parseInt(totalItems);
         self.options.$totalItems.text(totalItems);
         self.options.totalPages = self._getTotalPages();
 
@@ -486,7 +533,7 @@
           type: 'get'
         }).then(function (response, textStatus, request) {
           var resources = request.getResponseHeader('resources');
-          var totalItems = resources.split('/')[1];
+          var totalItems = parseInt(resources.split('/')[1]);
 
           return callback(totalItems);
         });
@@ -501,7 +548,7 @@
       var pattern = /\D/g;
       var total = result.replace(pattern, '');
 
-      return Math.ceil(total);
+      return parseInt(Math.ceil(total));
     },
 
     _getTotalPages: function () {
@@ -513,6 +560,120 @@
       var totalPages = Math.ceil(totalItems / ps);
 
       return totalPages;
+    },
+
+    /**
+     * Pagination
+     */
+    _createPagination: function () {
+      var self = this;
+
+      self.options.$pagination = $('.'+ self.options.classPagination);
+
+      self._createPaginationFirstButton();
+      self._createPaginationPrevButton();
+      self._createPaginationButtons();
+      self._createPaginationNextButton();
+      self._createPaginationLastButton();
+    },
+
+    _createPaginationFirstButton: function () {
+      var self = this;
+
+      var $first = $('<button />', {
+        class: 'pagination__button pagination__button--first',
+        page: '1'
+      }).text(self.options.textPaginationFirst);
+      self.options.$pagination.append($first);
+
+      if (self.request.query.PageNumber === 1) {
+        self._disablePaginationButton($first);
+      }
+    },
+
+    _createPaginationPrevButton: function () {
+      var self = this;
+
+      var $prev = $('<button />', {
+        class: 'pagination__button pagination__button--prev',
+        page: self.request.query.PageNumber - 1
+      }).text(self.options.textPaginationPrev);
+      self.options.$pagination.append($prev);
+
+      if (self.request.query.PageNumber === 1) {
+        self._disablePaginationButton($prev);
+      }
+    },
+
+    _createPaginationButtons: function () {
+      var self = this;
+
+      for (var i = self.request.query.PageNumber - self.options.paginationRangeButtons; i <= self.request.query.PageNumber; i++) {
+        if (i < 1 || i === self.request.query.PageNumber) {
+          continue;
+        }
+
+        var $page = $('<button />', {
+          class: 'pagination__button pagination__button--page',
+          page: i
+        }).text(i);
+        self.options.$pagination.append($page);
+      }
+
+      var $page = $('<button />', {
+        class: 'pagination__button pagination__button--page pagination__button--disabled pagination__button--current',
+        page: self.request.query.PageNumber,
+        disabled: 'disabled'
+      }).text(self.request.query.PageNumber);
+      self.options.$pagination.append($page);
+
+      for (var i = self.request.query.PageNumber + 1; i <= self.request.query.PageNumber + self.options.paginationRangeButtons; i++) {
+        if (i > self._getTotalPages()) {
+          continue;
+        }
+
+        var $page = $('<button />', {
+          class: 'pagination__button pagination__button--page',
+          page: i
+        }).text(i);
+        self.options.$pagination.append($page);
+      }
+    },
+
+    _createPaginationNextButton: function () {
+      var self = this;
+
+      var $next = $('<button />', {
+        class: 'pagination__button pagination__button--next',
+        page: self.request.query.PageNumber + 1
+      }).text(self.options.textPaginationNext);
+      self.options.$pagination.append($next);
+
+      if (self.request.query.PageNumber === self._getTotalPages()) {
+        self._disablePaginationButton($next);
+      }
+    },
+
+    _createPaginationLastButton: function () {
+      var self = this;
+
+      var $last = $('<button />', {
+        class: 'pagination__button pagination__button--last',
+        page: self._getTotalPages()
+      }).text(self.options.textPaginationLast);
+      self.options.$pagination.append($last);
+
+      if (self.request.query.PageNumber === self._getTotalPages()) {
+        self._disablePaginationButton($last);
+      }
+    },
+
+    _disablePaginationButton: function ($element) {
+      var self = this;
+
+      $element
+        .addClass('pagination__button--disabled')
+        .attr('disabled', 'disabled');
     },
 
 
@@ -722,6 +883,32 @@
       self._loadFirst(callback);
     },
 
+    bindPagination: function () {
+      var self = this;
+
+      $('.'+ self.options.classPagination).find('button').on('click', function (e) {
+        e.preventDefault();
+
+        var _this = $(this);
+        var page = parseInt(_this.attr('page'));
+
+        self.options.$result.trigger('avantisearch.beforeChangePage', [ self.options, self.request ]);
+
+        self.load('html', page, function () {
+          self._setUrlHash(page);
+          self._showItems(page);
+
+          self.request.query.PageNumber = page;
+          self._clearPagination();
+          self._startPagination();
+          self._concatRequest();
+          self._saveCookie();
+
+          self.options.$result.trigger('avantisearch.afterChangePage', [ self.options, self.request ]);
+        });
+      });
+    },
+
 
     //              _   _
     //   ___  _ __ | |_(_) ___  _ __  ___
@@ -737,6 +924,7 @@
         /**
          * Elements
          */
+        $resultItemsWrapper: $('.resultItemsWrapper'),
         $script: $('.resultItemsWrapper').children('script'),
         $totalItems: $('.searchResultsTime:first .resultado-busca-numero .value'),
         $selectOrder: $('#O'),
@@ -750,12 +938,23 @@
         classLoadBtnHide: 'load-btn--hide',
         classLoadLess: 'load-less',
         classLoadMore: 'load-more',
+        classPagination: 'pagination',
 
         /**
          * Texts
          */
         textLoadLess: 'Load less',
         textLoadMore: 'Load more',
+        textPaginationFirst: 'First',
+        textPaginationPrev: 'Prev',
+        textPaginationNext: 'Next',
+        textPaginationLast: 'Last',
+
+        /**
+         * Pagination
+         */
+        pagination: false,
+        paginationRangeButtons: 3,
 
         /**
          * Others
