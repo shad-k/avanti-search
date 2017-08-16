@@ -88,8 +88,9 @@
       localQuery.PageNumber = hash;
 
       return (
-        JSON.stringify(localQuery) === JSON.stringify(JSON.parse(cookie)) &&
-        typeof cookie !== 'undefined'
+        !isNaN(hash) &&
+        typeof cookie !== 'undefined' &&
+        JSON.stringify(localQuery) === JSON.stringify(JSON.parse(cookie))
       );
     },
 
