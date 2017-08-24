@@ -173,6 +173,10 @@
         startSecond = true;
       }
 
+      if (self.options.pagination === true) {
+        startSecond = false;
+      }
+
       self._hideButton(self.options.classLoadLess);
 
       self.load('html', pageNumber, function () {
