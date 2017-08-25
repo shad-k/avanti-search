@@ -5,7 +5,7 @@
  */
 
 ;(function ($) {
-  var AvantiSearch = {
+  window.AvantiSearch = {
     //  _       _ _
     // (_)_ __ (_) |_
     // | | '_ \| | __|
@@ -980,7 +980,7 @@
   $.fn.avantiSearch = function (settings) {
     var $result = this;
 
-    window.AvantiSearch = AvantiSearch.init($result, settings);
+    AvantiSearch.init($result, settings);
 
     return $result;
   };
