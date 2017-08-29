@@ -535,9 +535,8 @@
        * Get total items from API
        */
       if (typeof callback === 'function') {
-        var filter = self.request.query.fq;
-        var fq = self._concatRequestFilter(filter, 'fq');
-        var url = '/api/catalog_system/pub/products/search?'+ fq +'&_from=0&_to=1'
+        self._concatRequest();
+        var url = '/api/catalog_system/pub/products/search?'+ self.request.url +'&_from=0&_to=1';
 
         $.ajax({
           url: url,
