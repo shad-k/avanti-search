@@ -536,7 +536,10 @@
        */
       if (typeof callback === 'function') {
         self._concatRequest();
-        var url = '/api/catalog_system/pub/products/search?'+ self.request.url +'&_from=0&_to=1';
+
+        var requestUrl = self.request.url.replace('/buscapagina', '');
+
+        var url = '/api/catalog_system/pub/products/search'+ requestUrl +'&_from=0&_to=1';
 
         $.ajax({
           url: url,
@@ -865,6 +868,10 @@
         self._refreshFilter(filter, checked, function () {
           self.options.$result.trigger('avantisearch.afterFilter', [ self.options, self.request, _this ]);
           self._setUrlHash(1);
+
+          self._clearPagination();
+          self._createPagination();
+          self.bindPagination();
         });
       });
     },
