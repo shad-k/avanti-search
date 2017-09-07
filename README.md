@@ -54,6 +54,7 @@
 | textPaginationPrev | String | `Prev` | Description |
 | textPaginationNext | String | `Next` | Description |
 | textPaginationLast | String | `Last` | Description |
+| textEmptyResult | String | `No product found` | Description |
 
 ##### Pagination
 

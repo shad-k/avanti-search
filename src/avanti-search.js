@@ -285,6 +285,10 @@
 
         $list[method]($products.html());
 
+        if (!response.length) {
+            $list.html(self.options.textEmptyResult);
+        }
+
         if (self.options.$result.is(':hidden')) {
           self.options.$result.show();
         }
@@ -966,7 +970,7 @@
         textPaginationPrev: 'Prev',
         textPaginationNext: 'Next',
         textPaginationLast: 'Last',
-
+        textEmptyResult: 'No product found',
         /**
          * Pagination
          */
