@@ -82,13 +82,13 @@
       }
 
       var hash = parseInt(window.location.hash.substr(1));
-      var cookieRequest = JSON.parse(Cookies.get(self.options.cookieName));
+      var cookieRequest = Cookies.get(self.options.cookieName);
       var localRequest = $.extend({}, self.request);
 
       return (
         !isNaN(hash) &&
         typeof cookieRequest !== 'undefined' &&
-        localRequest.path === cookieRequest.path
+        localRequest.path === JSON.parse(cookieRequest.path)
       );
     },
 
