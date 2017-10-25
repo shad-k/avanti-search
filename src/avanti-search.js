@@ -1,5 +1,5 @@
 /*!
- * Avanti Search - v1.2.7 - 2017-09-07
+ * Avanti Search - v1.2.6 - 2017-08-12
  * https://github.com/avanti/avantisearch
  * Licensed MIT
  */
@@ -82,15 +82,13 @@
       }
 
       var hash = parseInt(window.location.hash.substr(1));
-      var cookie = Cookies.get(self.options.cookieName);
-
-      var localQuery = $.extend({}, self.request.query);
-      localQuery.PageNumber = hash;
+      var cookieRequest = JSON.parse(Cookies.get(self.options.cookieName));
+      var localRequest = $.extend({}, self.request);
 
       return (
         !isNaN(hash) &&
-        typeof cookie !== 'undefined' &&
-        JSON.stringify(localQuery) === JSON.stringify(JSON.parse(cookie))
+        typeof cookieRequest !== 'undefined' &&
+        localRequest.path === cookieRequest.path
       );
     },
 
@@ -210,6 +208,13 @@
       self._setUrlHash(1);
       self._saveCookie();
 
+      if (self.options.totalPages === 1) {
+        self._hideButton(self.options.classLoadMore);
+        self._disableButton(self.options.classLoadMore);
+
+        return false;
+      }
+
       if (self.options.pagination) {
         self._startPagination();
 
@@ -279,15 +284,9 @@
 
         $item.attr('page', self.request.query.PageNumber);
 
-        if (self.request.query.PageNumber > 1) {
-          $item.addClass(self.options.classItemPreLoad);
-        }
+        $item.addClass(self.options.classItemPreLoad);
 
         $list[method]($products.html());
-
-        if (!response.length) {
-            $list.html(self.options.textEmptyResult);
-        }
 
         if (self.options.$result.is(':hidden')) {
           self.options.$result.show();
@@ -322,7 +321,7 @@
 
       var cookie = Cookies.get(self.options.cookieName);
 
-      self.request.query = JSON.parse(cookie);
+      self.request = JSON.parse(cookie);
     },
 
     _applyCookieParams: function () {
@@ -486,16 +485,16 @@
       return url;
     },
 
-    _saveCookie: function (query) {
+    _saveCookie: function (request) {
       var self = this;
 
-      if (typeof query === 'undefined') {
-        query = JSON.parse(JSON.stringify(self.request.query));
+      if (typeof request === 'undefined') {
+        request = JSON.parse(JSON.stringify(self.request));
       }
 
-      var queryStringify = JSON.stringify(query);
+      var requestStringify = JSON.stringify(request);
 
-      Cookies.set(self.options.cookieName, queryStringify);
+      Cookies.set(self.options.cookieName, requestStringify);
     },
 
     _loadNext: function (pageByType) {
@@ -706,6 +705,7 @@
       var self = this;
 
       var requestUrl = self._getRequestUrl();
+
       return self._splitRequestUrl(requestUrl);
     },
 
@@ -754,7 +754,8 @@
           route: route,
           query: queryObject,
           hash: hash,
-          url: url
+          url: url,
+          path: window.location.pathname + window.location.search
         });
       }
 
@@ -799,9 +800,9 @@
 
           var pageByType = self._getPageByType(type);
 
-          var query = $.extend({}, self.request.query);
-          query.PageNumber = pageByType.showPage;
-          self._saveCookie(query);
+          var request = $.extend({}, self.request);
+          request.query.PageNumber = pageByType.showPage;
+          self._saveCookie(request);
 
           self._loadNext(pageByType) ?
             self.load(method, pageByType.nextPage) :
@@ -869,39 +870,50 @@
         }
 
         self.options.$result.trigger('avantisearch.beforeFilter', [ self.options, self.request, _this ]);
-        self._refreshFilter(filter, checked, function () {
-          self.options.$result.trigger('avantisearch.afterFilter', [ self.options, self.request, _this ]);
-          self._setUrlHash(1);
-
-          self._clearPagination();
-          self._createPagination();
-          self.bindPagination();
-        });
+        self._refreshFilter(filter, checked, _this);
       });
     },
 
     /**
      * Refresh filter
-     * @param  {string} filter Filter
+     * @param  {string,array} filter Filter
      * @param  {boolean} action true: add; false: remove
      */
-    _refreshFilter: function (filter, action, callback) {
+    _refreshFilter: function (filter, action, _this) {
       var self = this;
 
-      var filterSplit = filter.split('=');
+      var filterMap = function (item) {
+        var filterSplit = item.split('=');
 
-      var key = filterSplit[0];
-      var value = filterSplit[1];
+        var key = filterSplit[0];
+        var value = filterSplit[1];
 
-      if (action) {
-        self.request.query[key].push(value);
+        if (action) {
+          self.request.query[key].push(value);
 
-      } else {
-        var index = self.request.query[key].indexOf(value);
-        self.request.query[key].splice(index, 1);
+        } else {
+          var index = self.request.query[key].indexOf(value);
+          self.request.query[key].splice(index, 1);
+        }
       }
 
-      self._loadFirst(callback);
+      if (typeof filter === 'object') {
+        filter.map(filterMap);
+      } else if (typeof filter === 'string') {
+        filterMap(filter);
+      }
+
+      self._loadFirst(function () {
+        self.options.$result.trigger('avantisearch.afterFilter', [ self.options, self.request, _this || null ]);
+        self._setUrlHash(1);
+
+        if (self.options.pagination) {
+          self._clearPagination();
+          self._createPagination();
+        }
+
+        self.bindPagination();
+      });
     },
 
     bindPagination: function () {
