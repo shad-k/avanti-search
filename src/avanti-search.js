@@ -82,13 +82,19 @@
       }
 
       var hash = parseInt(window.location.hash.substr(1));
-      var cookieRequest = Cookies.get(self.options.cookieName);
+      var cookie = Cookies.get(self.options.cookieName);
+
+      if (typeof cookie === 'undefined') {
+        return false;
+      }
+
+      var cookieRequest = JSON.parse(cookie);
       var localRequest = $.extend({}, self.request);
 
       return (
         !isNaN(hash) &&
         typeof cookieRequest !== 'undefined' &&
-        localRequest.path === JSON.parse(cookieRequest.path)
+        localRequest.path === cookieRequest.path
       );
     },
 
