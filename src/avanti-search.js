@@ -287,12 +287,11 @@
         $products.find('.helperComplement').remove();
 
         var $item = $products.find('li');
-
         $item.attr('page', self.request.query.PageNumber);
-
         $item.addClass(self.options.classItemPreLoad);
 
-        $list[method]($products.html());
+        var productsContent = $products.html() || '';
+        $list[method](productsContent);
 
         if (self.options.$result.is(':hidden')) {
           self.options.$result.show();
@@ -528,7 +527,7 @@
         self.options.$totalItems.text(totalItems);
         self.options.totalPages = self._getTotalPages();
 
-        self._startFirst(1, self.options.totalPages === 1 ? false : true, callback);
+        self._startFirst(1, self.options.totalPages < 1 ? false : true, callback);
       });
     },
 
