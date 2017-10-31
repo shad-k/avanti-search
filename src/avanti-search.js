@@ -26,8 +26,6 @@
     start: function () {
       var self = this;
 
-      self._createButtons();
-
       self.request = self._setRequest();
       self._concatRequest();
       self._setPaginationInfo();
@@ -35,6 +33,8 @@
       self.options.pagination && self._setPaginationWrap();
 
       self.checkAndStart();
+
+      self._createButtons();
     },
 
     _createButtons: function () {
