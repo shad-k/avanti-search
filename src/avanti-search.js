@@ -32,9 +32,9 @@
 
       self.options.pagination && self._setPaginationWrap();
 
-      self.checkAndStart();
-
       self._createButtons();
+
+      self.checkAndStart();
     },
 
     _createButtons: function () {
