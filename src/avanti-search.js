@@ -1,5 +1,5 @@
 /*!
- * Avanti Search - v2.0.6 - 2017-11-13
+ * Avanti Search - v2.0.7 - 2017-12-08
  * https://github.com/avanti/avantisearch
  * Licensed MIT
  */
