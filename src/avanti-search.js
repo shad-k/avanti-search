@@ -205,12 +205,6 @@
     startWithoutCookie: function () {
       var self = this;
 
-      if (self._checkDefaultParams()) {
-        self._setDefaultParams();
-        self._startFirst(1, true);
-        return false;
-      }
-
       self.options.$result.find('> div > ul > li')
         .attr('page', 1)
         .removeClass('last first');
@@ -218,20 +212,30 @@
       self._setUrlHash(1);
       self._saveCookie();
 
-      if (self.options.totalPages === 1) {
-        self._hideButton(self.options.classLoadMore);
-        self._disableButton(self.options.classLoadMore);
-
-        return false;
+      if (self._checkDefaultParams()) {
+        self._setDefaultParams();
       }
 
       if (self.options.pagination) {
         self._startPagination();
-
-        return false;
       }
 
-      self.load('append', 2);
+      if (self.options.totalPages === 1) {
+        self._hideButton(self.options.classLoadMore);
+        self._disableButton(self.options.classLoadMore);
+
+        if (self._checkDefaultParams()) {
+          self._startFirst(1, true);
+        }
+
+      } else {
+        if (self._checkDefaultParams()) {
+          self._startFirst(1, true);
+
+        } else {
+          self.load('append', 2);
+        }
+      }
     },
 
     _startPagination: function () {
