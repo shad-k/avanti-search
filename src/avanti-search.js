@@ -382,6 +382,10 @@
     _setDefaultParams: function () {
       var self = this;
 
+      if (self.request.query.hasOwnProperty('O')) {
+        delete self.options.defaultParams.query.O
+      }
+
       self.request = $.extend(true, self.request, self.options.defaultParams);
     },
 
