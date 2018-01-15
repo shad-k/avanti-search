@@ -870,7 +870,7 @@
       var self = this;
 
       self.options.$filters.on('click', function (event) {
-        if (event.target.tagName === 'LABEL') {
+        if (event.target.tagName !== 'INPUT') {
           return true;
         }
 
