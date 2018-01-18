@@ -539,7 +539,7 @@
         self.options.$totalItems.text(totalItems);
         self.options.totalPages = self._getTotalPages();
 
-        self._startFirst(1, self.options.totalPages < 1 ? false : true, callback);
+        self._startFirst(1, self.options.totalPages < 2 ? false : true, callback);
       });
     },
 
