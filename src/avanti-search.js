@@ -548,17 +548,20 @@
      * @param  {function} callback If have callback means that it will pick up from API, else pick up from element in page
      * @return {number}
      */
-    _getTotalItems: function (callback) {
+    _getTotalItems: function (callback, attempts) {
       var self = this;
 
       /**
        * Get total items from API
        */
       if (typeof callback === 'function') {
+        if (typeof attempts === 'undefined') {
+          attempts = 0;
+        }
+
         self._concatRequest();
 
         var requestUrl = self.request.url.replace('/buscapagina', '');
-
         var url = '/api/catalog_system/pub/products/search'+ requestUrl +'&_from=0&_to=1';
 
         $.ajax({
@@ -568,7 +571,16 @@
           var resources = request.getResponseHeader('resources');
           var totalItems = parseInt(resources.split('/')[1]);
 
+          attempts = 0;
+
           return callback(totalItems);
+        }, function (error) {
+          if (response.status === 500 && attempts < self.options.attempts) {
+            attempts++;
+            self._getTotalItems(callback, attempts);
+          }
+
+          throw new Error('Error on get total items', response);
         });
 
         return false;
