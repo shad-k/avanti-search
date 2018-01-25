@@ -922,7 +922,10 @@
 
         } else {
           var index = self.request.query[key].indexOf(value);
-          self.request.query[key].splice(index, 1);
+
+          if (index > -1) {
+            self.request.query[key].splice(index, 1);
+          }
         }
       }
 
