@@ -1,5 +1,5 @@
 /*!
- * Avanti Search - v2.0.12 - 2018-01-25
+ * Avanti Search - v2.0.12 - 2018-01-19
  * https://github.com/avanti/avantisearch
  * Licensed MIT
  */
@@ -224,12 +224,12 @@
         self._hideButton(self.options.classLoadMore);
         self._disableButton(self.options.classLoadMore);
 
-        if (self._checkDefaultParams()) {
+        if (self._checkDefaultParams() || self.options.checkHasDefaultParams) {
           self._startFirst(1, true);
         }
 
       } else {
-        if (self._checkDefaultParams()) {
+        if (self._checkDefaultParams() || self.options.checkHasDefaultParams) {
           self._startFirst(1, true);
 
         } else {
@@ -755,33 +755,30 @@
       var route = splitUrl[0];
 
       if (splitUrl.length > 1) {
-        var queryString = splitUrl[1];
-        var splitHash = queryString.split('#');
+        var location = window.location;
+        var search = location.search;
+        var queryStringVTEX = splitUrl[1];
+        var queryStringBrowser = search.substr(1);
+        var splitHash = queryStringVTEX.split('#');
 
         var query = splitHash[0];
         var hash = splitHash[1];
 
-        var queryObject = {};
-        queryObject['fq'] = [];
+        self.options.queryObject = {};
+        self.options.queryObject['fq'] = [];
 
-        query.replace(/([^=&]+)=([^&]*)/g, function (m, key, value) {
-          var urlValue = decodeURIComponent(value);
-          var urlKey = decodeURIComponent(key)
+        var pattern = new RegExp('([^=&]+)=([^&]*)', 'g');
 
-          if (urlKey === 'fq') {
-            queryObject[urlKey].push(urlValue);
-
-          } else if (urlKey === 'PageNumber' && value === '') {
-            queryObject[urlKey] = 1;
-
-          } else {
-            queryObject[urlKey] = urlValue;
-          }
+        query.replace(pattern, function(m, key, value){
+          self._buildQueryStringVTEXParams(m, key, value, self)
+        });
+        queryStringBrowser.replace(pattern, function(m, key, value){
+          self._checkAndInsertQueryStringBrowserParams(m, key, value, self)
         });
 
         return ({
           route: route,
-          query: queryObject,
+          query: self.options.queryObject,
           hash: hash,
           url: url,
           path: window.location.pathname + window.location.search
@@ -792,6 +789,31 @@
         route: route,
         url: url
       });
+    },
+
+    _buildQueryStringVTEXParams: function (m, key, value, self) {
+      var urlValue = decodeURIComponent(value);
+      var urlKey = decodeURIComponent(key)
+
+      if (urlKey === 'fq') {
+        self.options.queryObject[urlKey].push(urlValue);
+
+      } else if (urlKey === 'PageNumber' && value === '') {
+        self.options.queryObject[urlKey] = 1;
+
+      } else {
+        self.options.queryObject[urlKey] = urlValue;
+      }
+    },
+
+    _checkAndInsertQueryStringBrowserParams: function (m, key, value, self) {
+      var urlValue = decodeURIComponent(value);
+      var urlKey = decodeURIComponent(key)
+
+      if (urlKey == 'O') {
+        self.options.queryObject[urlKey] = urlValue;
+        self.options.checkHasDefaultParams = true
+      }
     },
 
 
