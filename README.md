@@ -25,51 +25,51 @@
 
 ##### Elements
 
-| Option | Type | Default | Description |
+| Option | Type | Default
 |--- |--- |--- |--- |
-| $resultItemsWrapper | Element | `$('.resultItemsWrapper')` | Description |
-| $script | Element | `$('.resultItemsWrapper').children('script')` | Description |
-| $totalItems | Element | `$('.searchResultsTime:first .resultado-busca-numero .value')` | Description |
-| $selectOrder | Element | `$('#O')` | Description |
-| $filters | Element | `$('.search-multiple-navigator label')` | Description |
+| $resultItemsWrapper | Element | `$('.resultItemsWrapper')`
+| $script | Element | `$('.resultItemsWrapper').children('script')`
+| $totalItems | Element | `$('.searchResultsTime:first .resultado-busca-numero .value')`
+| $selectOrder | Element | `$('#O')`
+| $filters | Element | `$('.search-multiple-navigator label')`
 
 ##### Classes
 
-| Option | Type | Default | Description |
+| Option | Type | Default
 |--- |--- |--- |--- |
-| classFilterActive | String | `filter--active` | Description |
-| classItemPreLoad | String | `shelf-item--preload` | Description |
-| classLoadBtnHide | String | `load-btn--hide` | Description |
-| classLoadLess | String | `load-less` | Description |
-| classLoadMore | String | `load-more` | Description |
-| classPagination | String | `pagination` | Description |
+| classFilterActive | String | `filter--active`
+| classItemPreLoad | String | `shelf-item--preload`
+| classLoadBtnHide | String | `load-btn--hide`
+| classLoadLess | String | `load-less`
+| classLoadMore | String | `load-more`
+| classPagination | String | `pagination`
 
 ##### Texts
 
-| Option | Type | Default | Description |
+| Option | Type | Default
 |--- |--- |--- |--- |
-| textLoadLess | String | `Load less` | Description |
-| textLoadMore | String | `Load more` | Description |
-| textPaginationFirst | String | `First` | Description |
-| textPaginationPrev | String | `Prev` | Description |
-| textPaginationNext | String | `Next` | Description |
-| textPaginationLast | String | `Last` | Description |
-| textEmptyResult | String | `No product found` | Description |
+| textLoadLess | String | `Load less`
+| textLoadMore | String | `Load more`
+| textPaginationFirst | String | `First`
+| textPaginationPrev | String | `Prev`
+| textPaginationNext | String | `Next`
+| textPaginationLast | String | `Last`
+| textEmptyResult | String | `No product found`
 
 ##### Pagination
 
-| Option | Type | Default | Description |
+| Option | Type | Default
 |--- |--- |--- |--- |
-| pagination | Boolean | `false` | Description |
-| paginationRangeButtons | Number | `3` | Description |
+| pagination | Boolean | `false`
+| paginationRangeButtons | Number | `3`
 
 ##### Others
 
-| Option | Type | Default | Description |
+| Option | Type | Default
 |--- |--- |--- |--- |
-| cookieName | String | `AvantiSearchQuery` | Description |
+| cookieName | String | `AvantiSearchQuery`
 | defaultParams | Object | `{}` | Pass default params to request.<br>**Example:** `{ 'query': { 'O': 'OrderByPriceASC' } }` |
-| attempts | Number | `1` | Description |
+| attempts | Number | `1`
 
 **Example:**
 
@@ -88,20 +88,20 @@
 
 ## Events
 
-| Event name | Arguments | Description |
+| Event name | Arguments
 |--- |--- |--- |
-| avantisearch.init | event, options, request | Description |
-| avantisearch.initWithCookie | event, options, request | Description |
-| avantisearch.beforeSearch | event, options, request | Description |
-| avantisearch.afterSearch | event, options, request | Description |
-| avantisearch.beforeChangeOrder | event, options, request, element | Description |
-| avantisearch.afterChangeOrder | event, options, request, element | Description |
-| avantisearch.beforeFilter | event, options, request, element | Description |
-| avantisearch.afterFilter | event, options, request, element | Description |
-| avantisearch.beforeChangePage | event, options, request | Description |
-| avantisearch.afterChangePage | event, options, request | Description |
-| avantisearch.beforeShowItems | event, options, request, page | Description |
-| avantisearch.afterShowItems | event, options, request, page | Description |
+| avantisearch.init | event, options, request
+| avantisearch.initWithCookie | event, options, request
+| avantisearch.beforeSearch | event, options, request
+| avantisearch.afterSearch | event, options, request
+| avantisearch.beforeChangeOrder | event, options, request, element
+| avantisearch.afterChangeOrder | event, options, request, element
+| avantisearch.beforeFilter | event, options, request, element
+| avantisearch.afterFilter | event, options, request, element
+| avantisearch.beforeChangePage | event, options, request
+| avantisearch.afterChangePage | event, options, request
+| avantisearch.beforeShowItems | event, options, request, page
+| avantisearch.afterShowItems | event, options, request, page
 
 **Example:**
 ```javascript
