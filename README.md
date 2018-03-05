@@ -31,7 +31,7 @@
 ##### Elements
 
 | Option | Type | Default
-|--- |--- |--- |--- |
+|--- |--- |--- |
 | $resultItemsWrapper | Element | `$('.resultItemsWrapper')`
 | $script | Element | `$('.resultItemsWrapper').children('script')`
 | $totalItems | Element | `$('.searchResultsTime:first .resultado-busca-numero .value')`
@@ -41,7 +41,7 @@
 ##### Classes
 
 | Option | Type | Default
-|--- |--- |--- |--- |
+|--- |--- |--- |
 | classFilterActive | String | `filter--active`
 | classItemPreLoad | String | `shelf-item--preload`
 | classLoadBtnHide | String | `load-btn--hide`
@@ -52,7 +52,7 @@
 ##### Texts
 
 | Option | Type | Default
-|--- |--- |--- |--- |
+|--- |--- |--- |
 | textLoadLess | String | `Load less`
 | textLoadMore | String | `Load more`
 | textPaginationFirst | String | `First`
@@ -64,14 +64,14 @@
 ##### Pagination
 
 | Option | Type | Default
-|--- |--- |--- |--- |
+|--- |--- |--- |
 | pagination | Boolean | `false`
 | paginationRangeButtons | Number | `3`
 
 ##### Others
 
 | Option | Type | Default
-|--- |--- |--- |--- |
+|--- |--- |--- |
 | cookieName | String | `AvantiSearchQuery`
 | defaultParams | Object | `{}` | Pass default params to request.<br>**Example:** `{ 'query': { 'O': 'OrderByPriceASC' } }` |
 | attempts | Number | `1`
@@ -94,7 +94,7 @@
 ## Events
 
 | Event name | Arguments
-|--- |--- |--- |
+|--- |--- |
 | avantisearch.init | event, options, request
 | avantisearch.initWithCookie | event, options, request
 | avantisearch.beforeSearch | event, options, request
