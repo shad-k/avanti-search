@@ -12,6 +12,11 @@
 <script>
     var scriptContent = $('.resultItemsWrapper').children('script').html();
     eval('window.'+ /(PageClick_)([0-9]+)/g.exec(scriptContent)[0] +' = function () {}');
+
+    /**
+     * Avoid VTEX animation
+     */
+    function goToTopPage() {}
 </script>
 ```
 7. Call plugin in your JavaScript:

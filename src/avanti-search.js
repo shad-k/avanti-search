@@ -1065,8 +1065,3 @@
     return $result;
   };
 }(jQuery));
-
-/**
- * Avoid VTEX animation
- */
-function goToTopPage() {}
