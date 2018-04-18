@@ -52,7 +52,7 @@
         class: self.options.classPagination
       });
 
-      self.options.$resultItemsWrapper.append($pagination);
+      self.options.$pager.after($pagination);
     },
 
 
@@ -1013,6 +1013,7 @@
          */
         $resultItemsWrapper: $('.resultItemsWrapper'),
         $script: $('.resultItemsWrapper').children('script'),
+        $pager: $('.pager'),
         $totalItems: $('.searchResultsTime:first .resultado-busca-numero .value'),
         $selectOrder: $('#O'),
         $filters: $('.search-multiple-navigator label'),
