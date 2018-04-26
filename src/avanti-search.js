@@ -629,11 +629,12 @@
         class: 'pagination__button pagination__button--first',
         page: '1'
       }).text(self.options.textPaginationFirst);
-      self.options.$pagination.append($first);
 
       if (self.request.query.PageNumber === 1) {
         self._disablePaginationButton($first);
       }
+
+      self.options.$pagination.append($first);
     },
 
     _createPaginationPrevButton: function () {
@@ -643,11 +644,12 @@
         class: 'pagination__button pagination__button--prev',
         page: self.request.query.PageNumber - 1
       }).text(self.options.textPaginationPrev);
-      self.options.$pagination.append($prev);
 
       if (self.request.query.PageNumber === 1) {
         self._disablePaginationButton($prev);
       }
+
+      self.options.$pagination.append($prev);
     },
 
     _createPaginationButtons: function () {
@@ -692,11 +694,12 @@
         class: 'pagination__button pagination__button--next',
         page: self.request.query.PageNumber + 1
       }).text(self.options.textPaginationNext);
-      self.options.$pagination.append($next);
 
       if (self.request.query.PageNumber === self._getTotalPages()) {
         self._disablePaginationButton($next);
       }
+
+      self.options.$pagination.append($next);
     },
 
     _createPaginationLastButton: function () {
@@ -706,11 +709,12 @@
         class: 'pagination__button pagination__button--last',
         page: self._getTotalPages()
       }).text(self.options.textPaginationLast);
-      self.options.$pagination.append($last);
 
       if (self.request.query.PageNumber === self._getTotalPages()) {
         self._disablePaginationButton($last);
       }
+
+      self.options.$pagination.append($last);
     },
 
     _disablePaginationButton: function ($element) {
