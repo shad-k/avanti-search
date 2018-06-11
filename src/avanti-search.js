@@ -907,25 +907,22 @@
     bindFilters: function () {
       var self = this;
 
-      self.options.$filters.on('click', function (event) {
-        if (event.target.tagName !== 'INPUT') {
-          return true;
-        }
-
+      self.options.$filters.find('input').on('change', function (event) {
         var _this = $(this);
-        var $checkbox = _this.find('input');
-        var checked = $checkbox.is(':checked');
-        var filter = $checkbox.attr('rel');
+
+        var checked = _this.is(':checked');
+        var filter = _this.attr('rel');
+        var $label = _this.parent('label')
 
         if (checked) {
-          _this.addClass(self.options.classFilterActive);
+          $label.addClass(self.options.classFilterActive);
 
         } else {
-          _this.removeClass(self.options.classFilterActive);
+          $label.removeClass(self.options.classFilterActive);
         }
 
-        self.options.$result.trigger('avantisearch.beforeFilter', [ self.options, self.request, _this ]);
-        self._refreshFilter(filter, checked, _this);
+        self.options.$result.trigger('avantisearch.beforeFilter', [ self.options, self.request, $label ]);
+        self._refreshFilter(filter, checked, $label);
       });
     },
 
