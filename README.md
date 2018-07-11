@@ -97,6 +97,7 @@
 |--- |--- |
 | avantisearch.init | event, options, request
 | avantisearch.initWithCookie | event, options, request
+| avantisearch.initWithoutCookie | event, options, request
 | avantisearch.beforeSearch | event, options, request
 | avantisearch.afterSearch | event, options, request
 | avantisearch.beforeChangeOrder | event, options, request, element
@@ -126,7 +127,7 @@
 
 ## Tips and Tricks
 
-1. Call the events: `avantisearch.init` or `avantisearch.beforeSearch` before the plugin start.
+1. Call the events: `avantisearch.init`, `avantisearch.initWithCookie`, `avantisearch.initWithoutCookie` or `avantisearch.beforeSearch` before the plugin start.
 
 ## Dependencies
 

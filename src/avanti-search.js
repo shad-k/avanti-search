@@ -205,6 +205,8 @@
     startWithoutCookie: function () {
       var self = this;
 
+      self.options.$result.trigger('avantisearch.initWithoutCookie', [ self.options, self.request ]);
+
       self.options.$result.find('> div > ul > li')
         .attr('page', 1)
         .removeClass('last first');
