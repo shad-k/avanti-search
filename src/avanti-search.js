@@ -293,6 +293,11 @@
         var $list = self.options.$result.find('> div > ul');
         var $products = $(response).find('ul');
 
+        if($products.length === 0) {
+          self.options.$result.trigger('avantisearch.emptyResult', [self.options, self.request]);
+          return;
+        }
+
         $products.find('.last, .first').removeClass('last first');
         $products.find('.helperComplement').remove();
 
